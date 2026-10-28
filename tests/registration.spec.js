@@ -1,4 +1,4 @@
-import { test, expect } from 'playwright/test';
+import { test, expect } from '@playwright/test';
 
 test('REG-01: new customer can register and is logged in', async ({ page }) => {
     const username = `user_${Date.now()}`;
