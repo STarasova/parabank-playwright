@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { RegisterPage } from '../pages/RegisterPage';
 import { createCustomer } from '../utils/testData';
+import { only } from 'node:test';
 
 test('REG-01: new customer can register and is logged in', async ({ page }) => {
   
@@ -12,4 +13,15 @@ test('REG-01: new customer can register and is logged in', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: `Welcome ${customer.username}`})).toBeVisible();
     await expect(page.getByRole('link', { name: 'Log Out' })).toBeVisible();
+});
+
+test('REG-03: password and confirm password does not match', async({page}) => {
+    const customer = { ...createCustomer(), confirmPassword: 'MismatchedPassword' };
+    const registerPage = new RegisterPage(page);
+
+    await registerPage.open();
+    await registerPage.register(customer);
+
+    await expect(page.getByText('Passwords did not match.')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });

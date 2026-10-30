@@ -10,5 +10,6 @@ export function createCustomer() {
     ssn: '123-45-6789',
     username: `user_${Date.now()}`,
     password: 'Test123!',
+    confirmPassword: 'Test123!',
   };
 }
