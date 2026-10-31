@@ -1,13 +1,13 @@
-import {expect} from '@playwright/test';
+import { expect } from '@playwright/test';
 
 export class RegisterPage {
-    /** @param {import('@playwright/test').Page} page */
-    constructor(page) {
-        this.page = page;
+  /** @param {import('@playwright/test').Page} page */
+  constructor(page) {
+    this.page = page;
 
-        this.heading = page.getByRole('heading' , { name:'Signing up is easy!'});
-        this.firstNameInput = page.locator( '[id="customer.firstName"]');
-        this.lastNameInput = page.locator('[id="customer.lastName"]');
+    this.heading = page.getByRole('heading', { name: 'Signing up is easy!' });
+    this.firstNameInput = page.locator('[id="customer.firstName"]');
+    this.lastNameInput = page.locator('[id="customer.lastName"]');
     this.streetInput = page.locator('[id="customer.address.street"]');
     this.cityInput = page.locator('[id="customer.address.city"]');
     this.stateInput = page.locator('[id="customer.address.state"]');
@@ -18,10 +18,11 @@ export class RegisterPage {
     this.passwordInput = page.locator('[id="customer.password"]');
     this.confirmPasswordInput = page.locator('#repeatedPassword');
     this.registerButton = page.getByRole('button', { name: 'Register' });
+    this.confirmPasswordError = page.locator('[id="repeatedPassword.errors"]');
   }
- 
-  async open () {
-    await this.page.goto ('register.htm');
+
+  async open() {
+    await this.page.goto('register.htm');
     await expect(this.heading).toBeVisible();
   }
 
