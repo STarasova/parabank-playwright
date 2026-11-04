@@ -40,7 +40,7 @@ test('REG-02: empty form shows required field errors', async ({ page }) => {
 });
 
 test('REG-03: password and confirm password do not match', async ({ page }) => {
-  const customer = { confirmPassword: 'Mismatch' };
+  const customer = createCustomer({ confirmPassword: 'Mismatch' });
   const registerPage = new RegisterPage(page);
 
   await registerPage.open();
@@ -48,4 +48,23 @@ test('REG-03: password and confirm password do not match', async ({ page }) => {
 
   await expect(registerPage.confirmPasswordError).toHaveText('Passwords did not match.');
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
+});
+
+test('REG-04: login is tacken ', async ({ page }) => {
+  const customer = createCustomer({ username: 'user125' });
+  const registerPage = new RegisterPage(page);
+
+  await registerPage.open();
+  await registerPage.register(customer);
+
+  await expect(page.getByRole('heading', { name: `Welcome ${customer.username}` })).toBeVisible();
+  await page.getByRole('link', { name: 'Log Out' }).click();
+
+  await registerPage.open();
+
+  await registerPage.register(customer);
+
+  await expect(page.locator('[id="customer.username.errors"]')).toHaveText(
+    'This username already exists.',
+  );
 });
