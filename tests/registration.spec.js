@@ -13,6 +13,30 @@ test('REG-01: new customer can register and is logged in', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Log Out' })).toBeVisible();
 });
 
+test('REG-02: empty fields validation', async ({ page }) => {
+  const customer = {
+    ...createCustomer(),
+    firstName: '',
+    lastName: '',
+    street: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    phone: '',
+    ssn: '',
+    username: ``,
+    password: '',
+    confirmPassword: '',
+  };
+
+  const registerPage = new RegisterPage(page);
+
+  await registerPage.open();
+  await registerPage.register(customer);
+
+  await expect(registerPage.conformationFirstNameError).toHaveText('First name is required.');
+});
+
 test('REG-03: password and confirm password do not match', async ({ page }) => {
   const customer = { ...createCustomer(), confirmPassword: 'MismatchedPassword' };
   const registerPage = new RegisterPage(page);

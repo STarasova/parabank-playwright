@@ -1,4 +1,5 @@
 export function createCustomer() {
+  const password = 'Test123!';
   return {
     firstName: 'Anna',
     lastName: 'Tester',

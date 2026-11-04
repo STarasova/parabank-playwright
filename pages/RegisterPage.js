@@ -19,6 +19,7 @@ export class RegisterPage {
     this.confirmPasswordInput = page.locator('#repeatedPassword');
     this.registerButton = page.getByRole('button', { name: 'Register' });
     this.confirmPasswordError = page.locator('[id="repeatedPassword.errors"]');
+    this.conformationFirstNameError = page.locator('[id="customer.firstName.errors"]');
   }
 
   async open() {
@@ -26,7 +27,7 @@ export class RegisterPage {
     await expect(this.heading).toBeVisible();
   }
 
-  async register(customer) {
+  async fillForm(customer) {
     await this.firstNameInput.fill(customer.firstName);
     await this.lastNameInput.fill(customer.lastName);
     await this.streetInput.fill(customer.street);
@@ -38,6 +39,14 @@ export class RegisterPage {
     await this.usernameInput.fill(customer.username);
     await this.passwordInput.fill(customer.password);
     await this.confirmPasswordInput.fill(customer.confirmPassword);
+  }
+
+  async submit() {
     await this.registerButton.click();
+  }
+
+  async register(customer) {
+    await this.fillForm(customer);
+    await this.submit();
   }
 }
