@@ -45,6 +45,10 @@ export class RegisterPage {
     await this.registerButton.click();
   }
 
+  errorFor(fieldId) {
+    return this.page.locator(`[id="${fieldId}.errors"]`);
+  }
+
   async register(customer) {
     await this.fillForm(customer);
     await this.submit();

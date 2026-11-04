@@ -13,28 +13,29 @@ test('REG-01: new customer can register and is logged in', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Log Out' })).toBeVisible();
 });
 
-test('REG-02: empty fields validation', async ({ page }) => {
-  const customer = {
-    ...createCustomer(),
-    firstName: '',
-    lastName: '',
-    street: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    phone: '',
-    ssn: '',
-    username: ``,
-    password: '',
-    confirmPassword: '',
-  };
-
+test('REG-02: empty form shows required field errors', async ({ page }) => {
   const registerPage = new RegisterPage(page);
 
   await registerPage.open();
   await registerPage.register(customer);
 
-  await expect(registerPage.conformationFirstNameError).toHaveText('First name is required.');
+  const expectedErrors = [
+    ['customer.firstName', 'First name is required.'],
+    ['customer.lastName', 'Last name is required.'],
+    ['customer.address.street', 'Address is required.'],
+    ['customer.address.city', 'City is required.'],
+    ['customer.address.zipCode', 'Zip Code is required.'],
+    ['customer.ssn', 'Social Security Number is required.'],
+    ['customer.username', 'Username is required.'],
+    ['customer.password', 'Password is required.'],
+    ['repeatedPassword', 'Password confirmation is required.'],
+  ];
+
+  for (const [field, message] of expectedErrors) {
+    await expect(registerPage.errorFor(field)).toHaveText(message);
+  }
+
+  await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
 test('REG-03: password and confirm password do not match', async ({ page }) => {
