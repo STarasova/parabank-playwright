@@ -40,7 +40,7 @@ test('REG-02: empty form shows required field errors', async ({ page }) => {
 });
 
 test('REG-03: password and confirm password do not match', async ({ page }) => {
-  const customer = { ...createCustomer(), confirmPassword: 'MismatchedPassword' };
+  const customer = { confirmPassword: 'Mismatch' };
   const registerPage = new RegisterPage(page);
 
   await registerPage.open();

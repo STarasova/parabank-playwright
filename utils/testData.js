@@ -1,5 +1,5 @@
-export function createCustomer() {
-  const password = 'Test123!';
+export function createCustomer(overrides = {}) {
+  const password = overrides.password ?? 'Test123!';
   return {
     firstName: 'Anna',
     lastName: 'Tester',
@@ -12,5 +12,6 @@ export function createCustomer() {
     username: `user_${Date.now()}`,
     password,
     confirmPassword: password,
+    ...overrides,
   };
 }
