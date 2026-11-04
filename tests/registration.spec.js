@@ -17,13 +17,14 @@ test('REG-02: empty form shows required field errors', async ({ page }) => {
   const registerPage = new RegisterPage(page);
 
   await registerPage.open();
-  await registerPage.register(customer);
+  await registerPage.submit();
 
   const expectedErrors = [
     ['customer.firstName', 'First name is required.'],
     ['customer.lastName', 'Last name is required.'],
     ['customer.address.street', 'Address is required.'],
     ['customer.address.city', 'City is required.'],
+    ['customer.address.state', 'State is required.'],
     ['customer.address.zipCode', 'Zip Code is required.'],
     ['customer.ssn', 'Social Security Number is required.'],
     ['customer.username', 'Username is required.'],
