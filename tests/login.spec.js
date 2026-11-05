@@ -17,7 +17,13 @@ test.describe('Login', () => {
   test('AUTH-01 - login with valid username and valid password', async ({ page }) => {
     const loginPage = new LoginPage(page);
 
-    loginPage.open();
-    loginPage.logIn(customer);
+    await loginPage.open();
+    await loginPage.logIn(customer);
+  });
+
+  test('AUTH-02 - login with invalid password', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.open();
+    await loginPage.logIn({ ...customer, password: 'WrongPassword1!' });
   });
 });
