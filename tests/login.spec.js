@@ -19,6 +19,7 @@ test.describe('Login', () => {
 
     await loginPage.open();
     await loginPage.logIn(customer);
+    await expect(page.getByRole('heading', { name: 'Accounts Overview' })).toBeVisible();
   });
 
   test('AUTH-02 - login with invalid password', async ({ page }) => {
@@ -27,8 +28,7 @@ test.describe('Login', () => {
     const loginPage = new LoginPage(page);
     await loginPage.open();
     await loginPage.logIn({ ...customer, password: 'WrongPassword1!' });
-    await page.getByRole('button', { name: 'Log In' }).click();
-    await expect(page.getByText('Please enter a password')).toBeVisible();
+    await expect(page.getByText('Please enter a username and password.')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
   });
 });
