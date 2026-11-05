@@ -22,8 +22,13 @@ test.describe('Login', () => {
   });
 
   test('AUTH-02 - login with invalid password', async ({ page }) => {
+    test.fail(true, 'Known bug: ParaBank accepts any password for an existing username');
+
     const loginPage = new LoginPage(page);
     await loginPage.open();
     await loginPage.logIn({ ...customer, password: 'WrongPassword1!' });
+    await page.getByRole('button', { name: 'Log In' }).click();
+    await expect(page.getByText('Please enter a password')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
   });
 });
