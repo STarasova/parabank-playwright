@@ -19,7 +19,6 @@ export class RegisterPage {
     this.confirmPasswordInput = page.locator('#repeatedPassword');
     this.registerButton = page.getByRole('button', { name: 'Register' });
     this.confirmPasswordError = page.locator('[id="repeatedPassword.errors"]');
-    this.conformationFirstNameError = page.locator('[id="customer.firstName.errors"]');
   }
 
   async open() {

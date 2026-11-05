@@ -51,20 +51,24 @@ test('REG-03: password and confirm password do not match', async ({ page }) => {
 });
 
 test('REG-04: login is tacken ', async ({ page }) => {
-  const customer = createCustomer({ username: 'user125' });
+  const existingCustomer = createCustomer();
+  const newCustomer = createCustomer({ username: existingCustomer.username });
   const registerPage = new RegisterPage(page);
 
   await registerPage.open();
-  await registerPage.register(customer);
+  await registerPage.register(existingCustomer);
 
-  await expect(page.getByRole('heading', { name: `Welcome ${customer.username}` })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: `Welcome ${existingCustomer.username}` }),
+  ).toBeVisible();
   await page.getByRole('link', { name: 'Log Out' }).click();
 
   await registerPage.open();
 
-  await registerPage.register(customer);
+  await registerPage.register(newCustomer);
 
-  await expect(page.locator('[id="customer.username.errors"]')).toHaveText(
+  await expect(registerPage.errorFor('customer.username')).toHaveText(
     'This username already exists.',
   );
+  await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
