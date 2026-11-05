@@ -50,7 +50,7 @@ test('REG-03: password and confirm password do not match', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-04: login is tacken ', async ({ page }) => {
+test('REG-04: username is taken ', async ({ page }) => {
   const existingCustomer = createCustomer();
   const newCustomer = createCustomer({ username: existingCustomer.username });
   const registerPage = new RegisterPage(page);
