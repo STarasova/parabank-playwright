@@ -16,9 +16,17 @@ export class LoginPage {
     await expect(this.loginPanel).toBeVisible();
   }
 
-  async logIn(customer) {
+  async fillingLogInForm(customer) {
     await this.usernameInput.fill(customer.username);
     await this.passwordInput.fill(customer.password);
+  }
+
+  async clickLogInButton() {
     await this.logInButton.click();
+  }
+
+  async logIn(customer) {
+    await this.fillingLogInForm(customer);
+    await this.clickLogInButton();
   }
 }
