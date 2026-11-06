@@ -47,23 +47,14 @@ test('REG-03: rejects if password and confirm password do not match', async ({
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-04: rejects an already taken username ', async ({
+test('REG-04: rejects an already taken username', async ({
   page,
   registerPage,
-  registedCustomer,
+  registeredCustomer,
 }) => {
-  const newCustomer = createCustomer({ username: existingCustomer.username });
+  const newCustomer = createCustomer({ username: registeredCustomer.username });
 
   await registerPage.open();
-  await registerPage.register(registedCustomer);
-
-  await expect(
-    page.getByRole('heading', { name: `Welcome ${existingCustomer.username}` }),
-  ).toBeVisible();
-  await page.getByRole('link', { name: 'Log Out' }).click();
-
-  await registerPage.open();
-
   await registerPage.register(newCustomer);
 
   await expect(registerPage.errorFor('customer.username')).toHaveText(
