@@ -1,11 +1,8 @@
-import { test, expect } from '@playwright/test';
-import { RegisterPage } from '../pages/RegisterPage';
-import { createCustomer } from '../utils/testData';
+import { test, expect } from '../fixtures/fixtures.js';
+import { createCustomer } from '../utils/testData.js';
 
-test('REG-01: new customer can register and is logged in', async ({ page }) => {
+test('REG-01: new customer can register and is logged in', async ({ page, registerPage }) => {
   const customer = createCustomer();
-  const registerPage = new RegisterPage(page);
-
   await registerPage.open();
   await registerPage.register(customer);
 
@@ -13,9 +10,7 @@ test('REG-01: new customer can register and is logged in', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Log Out' })).toBeVisible();
 });
 
-test('REG-02: empty form shows required field errors', async ({ page }) => {
-  const registerPage = new RegisterPage(page);
-
+test('REG-02: empty form shows required field errors', async ({ page, registerPage }) => {
   await registerPage.open();
   await registerPage.submit();
 
@@ -39,9 +34,8 @@ test('REG-02: empty form shows required field errors', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-03: password and confirm password do not match', async ({ page }) => {
+test('REG-03: password and confirm password do not match', async ({ page, registerPage }) => {
   const customer = createCustomer({ confirmPassword: 'Mismatch' });
-  const registerPage = new RegisterPage(page);
 
   await registerPage.open();
   await registerPage.register(customer);
@@ -50,10 +44,9 @@ test('REG-03: password and confirm password do not match', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-04: username is taken ', async ({ page }) => {
+test('REG-04: username is taken ', async ({ page, registerPage }) => {
   const existingCustomer = createCustomer();
   const newCustomer = createCustomer({ username: existingCustomer.username });
-  const registerPage = new RegisterPage(page);
 
   await registerPage.open();
   await registerPage.register(existingCustomer);
