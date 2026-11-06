@@ -34,7 +34,10 @@ test('REG-02: empty form shows required field errors', async ({ page, registerPa
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-03: password and confirm password do not match', async ({ page, registerPage }) => {
+test('REG-03: rejects if password and confirm password do not match', async ({
+  page,
+  registerPage,
+}) => {
   const customer = createCustomer({ confirmPassword: 'Mismatch' });
 
   await registerPage.open();
@@ -44,12 +47,15 @@ test('REG-03: password and confirm password do not match', async ({ page, regist
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-04: username is taken ', async ({ page, registerPage }) => {
-  const existingCustomer = createCustomer();
+test('REG-04: rejects an already taken username ', async ({
+  page,
+  registerPage,
+  registedCustomer,
+}) => {
   const newCustomer = createCustomer({ username: existingCustomer.username });
 
   await registerPage.open();
-  await registerPage.register(existingCustomer);
+  await registerPage.register(registedCustomer);
 
   await expect(
     page.getByRole('heading', { name: `Welcome ${existingCustomer.username}` }),
