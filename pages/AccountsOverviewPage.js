@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { parseMoney } from '../utils//money';
+import { parseMoney } from '../utils/money.js';
 
 export class AccountsOverviewPage {
   /** @param {import('@playwright/test').Page} page */

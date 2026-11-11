@@ -4,13 +4,11 @@ test('ACC-01: new customer has an account', async ({ accountsOverviewPage, logge
   await accountsOverviewPage.open();
 
   const accountNumbers = await accountsOverviewPage.getAccountNumbers();
+  const balance = await accountsOverviewPage.getBalance(accountNumbers[0]);
+  const totalBalance = await accountsOverviewPage.getTotal();
 
   expect(accountNumbers).toHaveLength(1);
-
-  const totalBalance = await accountsOverviewPage.getTotal();
-  const balance = await accountsOverviewPage.getBalance(accountNumbers);
-
-  expect(totalBalance).toBeGreaterThan(0);
+  expect(balance).toBeGreaterThan(0);
   expect(totalBalance).toBe(balance);
 });
 
@@ -41,4 +39,28 @@ test('ACC-03: customer can open new saving account', async ({
 
   await accountDetailsPage.open(newAccountNumber);
   await expect(accountDetailsPage.accountType).toHaveText('SAVINGS');
+});
+
+test('ACC-04: correct total balance when opens new account', async ({
+  loggedInCustomer,
+  accountsOverviewPage,
+  openAccountPage,
+}) => {
+  await accountsOverviewPage.open();
+  const [initialAccount] = await accountsOverviewPage.getAccountNumbers();
+  const initialBalanceBefore = await accountsOverviewPage.getBalance(initialAccount);
+  const totalBefore = await accountsOverviewPage.getTotal();
+
+  await openAccountPage.open();
+  await openAccountPage.openNewAccount('SAVINGS');
+  const newAccount = await openAccountPage.getNewAccountNumber();
+
+  await accountsOverviewPage.open();
+  const initialBalanceAfter = await accountsOverviewPage.getBalance(initialAccount);
+  const newBalance = await accountsOverviewPage.getBalance(newAccount);
+  const totalAfter = await accountsOverviewPage.getTotal();
+
+  expect(newBalance).toBeGreaterThan(0);
+  expect(initialBalanceAfter).toBeCloseTo(initialBalanceBefore - newBalance, 2);
+  expect(totalAfter).toBeCloseTo(totalBefore, 2);
 });
