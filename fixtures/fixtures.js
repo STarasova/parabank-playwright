@@ -3,6 +3,8 @@ import { RegisterPage } from '../pages/RegisterPage.js';
 import { LoginPage } from '../pages/LoginPage.js';
 import { createCustomer } from '../utils/testData.js';
 import { AccountsOverviewPage } from '../pages/AccountsOverviewPage.js';
+import { OpenAccountPage } from '../pages/OpenAccountPage.js';
+import { AccountDetailsPage } from '../pages/AccountDetailsPage.js';
 
 export const test = base.extend({
   registerPage: async ({ page }, use) => {
@@ -34,6 +36,14 @@ export const test = base.extend({
 
   accountsOverviewPage: async ({ page }, use) => {
     await use(new AccountsOverviewPage(page));
+  },
+
+  openAccountPage: async ({ page }, use) => {
+    await use(new OpenAccountPage(page));
+  },
+
+  accountDetailsPage: async ({ page }, use) => {
+    await use(new AccountDetailsPage(page));
   },
 });
 
