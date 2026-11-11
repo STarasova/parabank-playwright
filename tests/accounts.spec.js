@@ -6,6 +6,12 @@ test('ACC-01: new customer has an account', async ({ accountsOverviewPage, logge
   const accountNumbers = await accountsOverviewPage.getAccountNumbers();
 
   expect(accountNumbers).toHaveLength(1);
+
+  const totalBalance = await accountsOverviewPage.getTotal();
+  const balance = await accountsOverviewPage.getBalance(accountNumbers);
+
+  expect(totalBalance).toBeGreaterThan(0);
+  expect(totalBalance).toBe(balance);
 });
 
 test('ACC-02: customer can open new checking account', async ({
