@@ -7,6 +7,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: 'html',
+  workers: 2,
 
   use: {
     baseURL: 'https://parabank.parasoft.com/parabank/',
