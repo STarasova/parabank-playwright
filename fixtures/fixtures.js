@@ -5,6 +5,7 @@ import { createCustomer } from '../utils/testData.js';
 import { AccountsOverviewPage } from '../pages/AccountsOverviewPage.js';
 import { OpenAccountPage } from '../pages/OpenAccountPage.js';
 import { AccountDetailsPage } from '../pages/AccountDetailsPage.js';
+import { TransferFundsPage } from '../pages/TransferFundsPage.js';
 
 export const test = base.extend({
   registerPage: async ({ page }, use) => {
@@ -44,6 +45,24 @@ export const test = base.extend({
 
   accountDetailsPage: async ({ page }, use) => {
     await use(new AccountDetailsPage(page));
+  },
+
+  customerWithTwoAccounts: async (
+    { loggedInCustomer, openAccountPage, accountsOverviewPage },
+    use,
+  ) => {
+    await accountsOverviewPage.open();
+    const [firstAccount] = await accountsOverviewPage.getAccountNumbers();
+
+    await openAccountPage.open();
+    await openAccountPage.openNewAccount('SAVINGS');
+    const secondAccount = await openAccountPage.getNewAccountNumber();
+
+    await use({ customer: loggedInCustomer, firstAccount, secondAccount });
+  },
+
+  transferFundsPage: async ({ page }, use) => {
+    await use(new TransferFundsPage(page));
   },
 });
 
