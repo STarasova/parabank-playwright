@@ -25,3 +25,27 @@ test('TRF-01: transfer moves money between accounts', async ({
   expect(toBalanceAfter).toBeCloseTo(toBalanceBefore + amount, 2);
   expect(totalAfter).toBe(totalBefore, 2);
 });
+
+test('TRF-02: transfer is shown in the history of accounts', async ({
+  customerWithTwoAccounts,
+  transferFundsPage,
+  accountDetailsPage,
+}) => {
+  const { firstAccount: fromAccount, secondAccount: toAccount } = customerWithTwoAccounts;
+
+  await transferFundsPage.open();
+  const amount = 1;
+  await transferFundsPage.transfer(amount, fromAccount, toAccount);
+
+  await accountDetailsPage.open(fromAccount);
+  const sent = await accountDetailsPage.getTransaction(amount);
+
+  expect(sent.debit).toBe(amount);
+  expect(sent.credit).toBe(0);
+
+  await accountDetailsPage.open(toAccount);
+  const received = await accountDetailsPage.getTransaction(amount);
+
+  expect(received.credit).toBe(amount);
+  expect(received.debit).toBe(0);
+});
