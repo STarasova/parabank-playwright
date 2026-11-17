@@ -80,3 +80,126 @@ test('TRF-03: rejects a transfer with an empty amount', async ({
   expect(toBalanceAfter).toBe(toBalanceBefore);
   expect(totalAfter).toBe(totalBefore);
 });
+
+test('TRF-04: rejects a transfer with a non-digit amount', async ({
+  customerWithTwoAccounts,
+  transferFundsPage,
+  accountsOverviewPage,
+}) => {
+  const { firstAccount: fromAccount, secondAccount: toAccount } = customerWithTwoAccounts;
+
+  await accountsOverviewPage.open();
+  const fromBalanceBefore = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceBefore = await accountsOverviewPage.getBalance(toAccount);
+  const totalBefore = await accountsOverviewPage.getTotal();
+
+  await transferFundsPage.open();
+  const amount = 'abc';
+
+  await transferFundsPage.fillForm(amount, fromAccount, toAccount);
+  await transferFundsPage.submit();
+
+  await expect(transferFundsPage.errorMessage).toBeVisible();
+
+  await accountsOverviewPage.open();
+  const fromBalanceAfter = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceAfter = await accountsOverviewPage.getBalance(toAccount);
+  const totalAfter = await accountsOverviewPage.getTotal();
+
+  expect(fromBalanceAfter).toBe(fromBalanceBefore);
+  expect(toBalanceAfter).toBe(toBalanceBefore);
+  expect(totalAfter).toBe(totalBefore);
+});
+
+test('TRF-05: rejects a transfer with a zero amount', async ({
+  customerWithTwoAccounts,
+  transferFundsPage,
+  accountsOverviewPage,
+}) => {
+  test.fail(true, 'Known bug: ParaBank accepts a zero transfer amount');
+  const { firstAccount: fromAccount, secondAccount: toAccount } = customerWithTwoAccounts;
+
+  await accountsOverviewPage.open();
+  const fromBalanceBefore = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceBefore = await accountsOverviewPage.getBalance(toAccount);
+  const totalBefore = await accountsOverviewPage.getTotal();
+
+  await transferFundsPage.open();
+  const amount = 0;
+
+  await transferFundsPage.fillForm(amount, fromAccount, toAccount);
+  await transferFundsPage.submit();
+
+  await expect(transferFundsPage.errorMessage).toBeVisible();
+
+  await accountsOverviewPage.open();
+  const fromBalanceAfter = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceAfter = await accountsOverviewPage.getBalance(toAccount);
+  const totalAfter = await accountsOverviewPage.getTotal();
+
+  expect(fromBalanceAfter).toBe(fromBalanceBefore);
+  expect(toBalanceAfter).toBe(toBalanceBefore);
+  expect(totalAfter).toBe(totalBefore);
+});
+
+test('TRF-06: rejects a transfer with a negative amount', async ({
+  customerWithTwoAccounts,
+  transferFundsPage,
+  accountsOverviewPage,
+}) => {
+  test.fail(true, 'Known bug: ParaBank accepts a negative transfer amount');
+  const { firstAccount: fromAccount, secondAccount: toAccount } = customerWithTwoAccounts;
+
+  await accountsOverviewPage.open();
+  const fromBalanceBefore = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceBefore = await accountsOverviewPage.getBalance(toAccount);
+  const totalBefore = await accountsOverviewPage.getTotal();
+
+  await transferFundsPage.open();
+  const amount = -10;
+
+  await transferFundsPage.fillForm(amount, fromAccount, toAccount);
+  await transferFundsPage.submit();
+
+  await expect(transferFundsPage.errorMessage).toBeVisible();
+
+  await accountsOverviewPage.open();
+  const fromBalanceAfter = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceAfter = await accountsOverviewPage.getBalance(toAccount);
+  const totalAfter = await accountsOverviewPage.getTotal();
+
+  expect(fromBalanceAfter).toBe(fromBalanceBefore);
+  expect(toBalanceAfter).toBe(toBalanceBefore);
+  expect(totalAfter).toBe(totalBefore);
+});
+
+test('TRF-06: rejects a transfer with an amount bigger than a balance', async ({
+  customerWithTwoAccounts,
+  transferFundsPage,
+  accountsOverviewPage,
+}) => {
+  test.fail(true, 'Known bug: ParaBank allows a transfer bigger than the balance');
+  const { firstAccount: fromAccount, secondAccount: toAccount } = customerWithTwoAccounts;
+
+  await accountsOverviewPage.open();
+  const fromBalanceBefore = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceBefore = await accountsOverviewPage.getBalance(toAccount);
+  const totalBefore = await accountsOverviewPage.getTotal();
+
+  await transferFundsPage.open();
+  const amount = 10000;
+
+  await transferFundsPage.fillForm(amount, fromAccount, toAccount);
+  await transferFundsPage.submit();
+
+  await expect(transferFundsPage.errorMessage).toBeVisible();
+
+  await accountsOverviewPage.open();
+  const fromBalanceAfter = await accountsOverviewPage.getBalance(fromAccount);
+  const toBalanceAfter = await accountsOverviewPage.getBalance(toAccount);
+  const totalAfter = await accountsOverviewPage.getTotal();
+
+  expect(fromBalanceAfter).toBe(fromBalanceBefore);
+  expect(toBalanceAfter).toBe(toBalanceBefore);
+  expect(totalAfter).toBe(totalBefore);
+});
