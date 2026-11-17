@@ -142,7 +142,7 @@ test('TRF-05: rejects a transfer with a zero amount', async ({
   expect(totalAfter).toBe(totalBefore);
 });
 
-test('TRF-06: rejects a transfer with a negative amount', async ({
+test('TRF-08: rejects a transfer with a negative amount', async ({
   customerWithTwoAccounts,
   transferFundsPage,
   accountsOverviewPage,
@@ -201,5 +201,33 @@ test('TRF-06: rejects a transfer with an amount bigger than a balance', async ({
 
   expect(fromBalanceAfter).toBe(fromBalanceBefore);
   expect(toBalanceAfter).toBe(toBalanceBefore);
+  expect(totalAfter).toBe(totalBefore);
+});
+
+test('TRF-07: rejects a transfer to the same account', async ({
+  customerWithTwoAccounts,
+  transferFundsPage,
+  accountsOverviewPage,
+}) => {
+  //test.fail(true, 'Known bug: ParaBank allows a transfer bigger than the balance');
+  const { firstAccount: account } = customerWithTwoAccounts;
+
+  await accountsOverviewPage.open();
+  const balanceBefore = await accountsOverviewPage.getBalance(account);
+  const totalBefore = await accountsOverviewPage.getTotal();
+
+  await transferFundsPage.open();
+  const amount = 10;
+
+  await transferFundsPage.fillForm(amount, account, account);
+  await transferFundsPage.submit();
+
+  await expect(transferFundsPage.errorMessage).toBeVisible();
+
+  await accountsOverviewPage.open();
+  const balanceAfter = await accountsOverviewPage.getBalance(account);
+  const totalAfter = await accountsOverviewPage.getTotal();
+
+  expect(balanceAfter).toBe(balanceBefore);
   expect(totalAfter).toBe(totalBefore);
 });
