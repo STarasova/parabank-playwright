@@ -17,6 +17,8 @@ export class BillPaymentPage {
     this.fromAccountSelect = page.locator('select[name="fromAccountId"]');
 
     this.sendPaymentButton = page.getByRole('button', { name: 'Send Payment' });
+
+    this.accountMismatchError = page.locator('#validationModel-verifyAccount-mismatch');
   }
 
   async open() {
