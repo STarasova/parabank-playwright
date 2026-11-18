@@ -19,7 +19,7 @@ export class BillPaymentPage {
     this.sendPaymentButton = page.getByRole('button', { name: 'Send Payment' });
 
     this.accountMismatchError = page.locator('#validationModel-verifyAccount-mismatch');
-    this.invalidAccountError = page.locator('#validationModel-amount-invalid');
+    this.invalidAmountError = page.locator('#validationModel-amount-invalid');
   }
 
   async open() {

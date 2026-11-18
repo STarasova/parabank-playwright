@@ -1,4 +1,3 @@
-import { verify } from 'node:crypto';
 import { test, expect } from '../fixtures/fixtures.js';
 import { createPayee } from '../utils/testData.js';
 
@@ -40,6 +39,9 @@ test('BILL-02: rejects a payment when account numbers do not match', async ({
   await billPaymentPage.submit();
 
   await expect(billPaymentPage.accountMismatchError).toBeVisible();
+  await expect(billPaymentPage.accountMismatchError).toHaveText(
+    'The account numbers do not match.',
+  );
 
   await accountsOverviewPage.open();
   const balanceAfter = await accountsOverviewPage.getBalance(fromAccount);
@@ -72,13 +74,14 @@ test('BILL-03: empty form shows required field errors', async ({
   }
 });
 
-test('BILL-04: rejects a payment when amount is non-digits', async ({
+test('BILL-04: rejects a non-numeric amount', async ({
   loggedInCustomer,
   billPaymentPage,
   accountsOverviewPage,
 }) => {
   await accountsOverviewPage.open();
   const [fromAccount] = await accountsOverviewPage.getAccountNumbers();
+  const balanceBefore = await accountsOverviewPage.getBalance(fromAccount);
   const payee = createPayee();
   const amount = 'abc';
 
@@ -86,6 +89,11 @@ test('BILL-04: rejects a payment when amount is non-digits', async ({
   await billPaymentPage.fillForm(payee, amount, fromAccount);
   await billPaymentPage.submit();
 
-  await expect(billPaymentPage.invalidAccountError).toBeVisible();
-  await expect(billPaymentPage.invalidAccountError).toHaveText('Please enter a valid amount.');
+  await expect(billPaymentPage.invalidAmountError).toBeVisible();
+  await expect(billPaymentPage.invalidAmountError).toHaveText('Please enter a valid amount.');
+
+  await accountsOverviewPage.open();
+  const balanceAfter = await accountsOverviewPage.getBalance(fromAccount);
+
+  expect(balanceAfter).toBe(balanceBefore);
 });
