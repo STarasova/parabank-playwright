@@ -1,0 +1,23 @@
+import { test, expect } from '../fixtures/fixtures.js';
+import { createPayee } from '../utils/testData.js';
+
+test('BILL-01: pays a bill and reduces the balance', async ({
+  loggedInCustomer,
+  billPaymentPage,
+  accountsOverviewPage,
+}) => {
+  await accountsOverviewPage.open();
+  const [fromAccount] = await accountsOverviewPage.getAccountNumbers();
+  const balanceBefore = await accountsOverviewPage.getBalance(fromAccount);
+
+  const payee = createPayee();
+  const amount = 50;
+
+  await billPaymentPage.open();
+  await billPaymentPage.pay(payee, amount, fromAccount);
+
+  await accountsOverviewPage.open();
+  const balanceAfter = await accountsOverviewPage.getBalance(fromAccount);
+
+  expect(balanceAfter).toBeCloseTo(balanceBefore - amount, 2);
+});

@@ -209,7 +209,7 @@ test('TRF-07: rejects a transfer to the same account', async ({
   transferFundsPage,
   accountsOverviewPage,
 }) => {
-  //test.fail(true, 'Known bug: ParaBank allows a transfer bigger than the balance');
+  test.fail(true, 'Known bug: ParaBank allows a transfer to the same account');
   const { firstAccount: account } = customerWithTwoAccounts;
 
   await accountsOverviewPage.open();

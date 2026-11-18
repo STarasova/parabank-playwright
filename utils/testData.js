@@ -15,3 +15,19 @@ export function createCustomer(overrides = {}) {
     ...overrides,
   };
 }
+
+export function createPayee(overrides = {}) {
+  const account = overrides.account ?? '12345';
+  return {
+    payeeName: 'Alisa',
+    address: 'Main Street 2',
+    city: 'Tallinn',
+    state: 'Harjumaa',
+    zipCode: '10105',
+    phone: '123123123',
+    account,
+    verifyAccount: account,
+
+    ...overrides,
+  };
+}

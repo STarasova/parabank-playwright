@@ -6,6 +6,7 @@ import { AccountsOverviewPage } from '../pages/AccountsOverviewPage.js';
 import { OpenAccountPage } from '../pages/OpenAccountPage.js';
 import { AccountDetailsPage } from '../pages/AccountDetailsPage.js';
 import { TransferFundsPage } from '../pages/TransferFundsPage.js';
+import { BillPaymentPage } from '../pages/BillPaymentPage.js';
 
 export const test = base.extend({
   registerPage: async ({ page }, use) => {
@@ -63,6 +64,10 @@ export const test = base.extend({
 
   transferFundsPage: async ({ page }, use) => {
     await use(new TransferFundsPage(page));
+  },
+
+  billPaymentPage: async ({ page }, use) => {
+    await use(new BillPaymentPage(page));
   },
 });
 
