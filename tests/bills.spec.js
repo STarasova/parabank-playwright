@@ -71,3 +71,21 @@ test('BILL-03: empty form shows required field errors', async ({
     await expect(billPaymentPage.errorFor(field)).toHaveText(message);
   }
 });
+
+test('BILL-04: rejects a payment when amount is non-digits', async ({
+  loggedInCustomer,
+  billPaymentPage,
+  accountsOverviewPage,
+}) => {
+  await accountsOverviewPage.open();
+  const [fromAccount] = await accountsOverviewPage.getAccountNumbers();
+  const payee = createPayee();
+  const amount = 'abc';
+
+  await billPaymentPage.open();
+  await billPaymentPage.fillForm(payee, amount, fromAccount);
+  await billPaymentPage.submit();
+
+  await expect(billPaymentPage.invalidAccountError).toBeVisible();
+  await expect(billPaymentPage.invalidAccountError).toHaveText('Please enter a valid amount.');
+});
