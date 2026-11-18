@@ -23,7 +23,7 @@ test('BILL-01: pays a bill and reduces the balance', async ({
   expect(balanceAfter).toBeCloseTo(balanceBefore - amount, 2);
 });
 
-test('BILL-02: rejects if accounts do not match', async ({
+test('BILL-02: rejects a payment when account numbers do not match', async ({
   loggedInCustomer,
   billPaymentPage,
   accountsOverviewPage,
@@ -45,4 +45,29 @@ test('BILL-02: rejects if accounts do not match', async ({
   const balanceAfter = await accountsOverviewPage.getBalance(fromAccount);
 
   expect(balanceAfter).toBe(balanceBefore);
+});
+
+test('BILL-03: empty form shows required field errors', async ({
+  loggedInCustomer,
+  billPaymentPage,
+}) => {
+  const expectedErrors = [
+    ['name', 'Payee name is required.'],
+    ['address', 'Address is required.'],
+    ['city', 'City is required.'],
+    ['state', 'State is required.'],
+    ['zipCode', 'Zip Code is required.'],
+    ['phoneNumber', 'Phone number is required.'],
+    ['account-empty', 'Account number is required.'],
+    ['verifyAccount-empty', 'Account number is required.'],
+    ['amount-empty', 'The amount cannot be empty.'],
+  ];
+
+  await billPaymentPage.open();
+  await billPaymentPage.submit();
+
+  for (const [field, message] of expectedErrors) {
+    await expect(billPaymentPage.errorFor(field)).toBeVisible();
+    await expect(billPaymentPage.errorFor(field)).toHaveText(message);
+  }
 });

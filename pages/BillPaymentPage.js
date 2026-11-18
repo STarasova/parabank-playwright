@@ -41,6 +41,10 @@ export class BillPaymentPage {
     await this.fromAccountSelect.selectOption(fromAccount);
   }
 
+  errorFor(fieldId) {
+    return this.page.locator(`[id="validationModel-${fieldId}"]`);
+  }
+
   async submit() {
     await this.sendPaymentButton.click();
   }
