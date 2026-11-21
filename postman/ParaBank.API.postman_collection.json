@@ -1,0 +1,461 @@
+{
+  "info": {
+    "_postman_id": "395dd07c-4fed-4b92-946b-b9707a3b26da",
+    "name": "ParaBank API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24499696"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\npm.test('returns the customer', () => {\r\n  const customer = pm.response.json();\r\n  pm.expect(customer.id).to.be.a('number');\r\n});\r\n\r\npm.environment.set('customerId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/login/{{username}}/{{password}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login",
+                "{{username}}",
+                "{{password}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Get accounts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const accounts = pm.response.json();\r\nconst account = accounts[0];\r\n\r\npm.test('status is 200', () => {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\npm.test('one account', () => {\r\n  pm.expect(accounts.length).to.equal(1);\r\n});\r\n\r\npm.test('balance is positive', () => {\r\n  pm.expect(account.balance).to.be.above(0);\r\n});\r\n\r\npm.environment.set('accountId', account.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "customers",
+                "{{customerId}}",
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transfer",
+      "item": [
+        {
+          "name": "1. Create second account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.environment.set(\"secondAccountId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/createAccount?customerId={{customerId}}&newAccountType=0&fromAccountId={{accountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "createAccount"
+              ],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "{{customerId}}"
+                },
+                {
+                  "key": "newAccountType",
+                  "value": "0"
+                },
+                {
+                  "key": "fromAccountId",
+                  "value": "{{accountId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get sender balance before",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\npm.environment.set(\"fromBalanceBefore\", pm.response.json().balance);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get receiver balance before",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\npm.environment.set(\"toBalanceBefore\", pm.response.json().balance);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{secondAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{secondAccountId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Transfer",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('amount', 12.35);\r\n\r\n"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test('Success transfer message', function () {\r\n    pm.expect(pm.response.text()).to.include('Successfully transferred $12.35 ');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{accountId}}&toAccountId={{secondAccountId}}&amount={{amount}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{accountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{secondAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "{{amount}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get sender balance after",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst before = Number(pm.environment.get('fromBalanceBefore'));\r\nconst amount = Number(pm.environment.get('amount'));\r\n\r\npm.test(\"Sender account balance is decreased by amount\", ()=> {\r\n    pm.expect(pm.response.json().balance).to.be.closeTo(before - amount, 0.01);\r\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Get receiver balance after",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst before = Number(pm.environment.get('toBalanceBefore'));\r\nconst amount = Number(pm.environment.get('amount'));\r\n\r\npm.test(\"Receiver account balance is increased by amount\", ()=> {\r\n    pm.expect(pm.response.json().balance).to.be.closeTo(before + amount, 0.01);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{secondAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{secondAccountId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative",
+      "item": [
+        {
+          "name": "Login with wrong password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", ()=> {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\nconst username = pm.environment.get(\"username\");\r\npm.test('No username in response', ()=> {\r\n    pm.expect(pm.response.text()).to.not.include(username)\r\n});\r\n\r\npm.test('Error message', ()=> {\r\n    pm.expect(pm.response.text()).to.include('Invalid username and/or password')\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/login/{{username}}/wrong-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login",
+                "{{username}}",
+                "wrong-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unknown account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('returns a client error', () => {\r\n  pm.expect(pm.response.code).to.be.within(400, 499);\r\n});\r\n\r\npm.test(\"Response body contains 'Could not find account'\", function () {\r\n    pm.expect(pm.response.text()).to.include('Could not find account');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "000"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Negative test for logging in with wrong password and getting account that does not exist"
+    },
+    {
+      "name": "Known bugs",
+      "item": [
+        {
+          "name": "Transfer negative amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('returns a client error', () => {\r\n  pm.expect(pm.response.code).to.be.within(400, 499);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{accountId}}&toAccountId={{secondAccountId}}&amount=-50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{accountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{secondAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "-50"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
