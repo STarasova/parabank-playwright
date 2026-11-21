@@ -33,4 +33,12 @@ export class ParaBankApi {
     await expect(response).toBeOK();
     return await response.json();
   }
+
+  async getAccount(accountId) {
+    const response = await this.request.get(`${API}/accounts/${accountId}`, {
+      headers: HEADERS,
+    });
+    await expect(response).toBeOK();
+    return await response.json();
+  }
 }
