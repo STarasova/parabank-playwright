@@ -7,6 +7,7 @@ import { OpenAccountPage } from '../pages/OpenAccountPage.js';
 import { AccountDetailsPage } from '../pages/AccountDetailsPage.js';
 import { TransferFundsPage } from '../pages/TransferFundsPage.js';
 import { BillPaymentPage } from '../pages/BillPaymentPage.js';
+import { ParaBankApi } from '../api/ParaBankAPI.js';
 
 export const test = base.extend({
   registerPage: async ({ page }, use) => {
@@ -68,6 +69,10 @@ export const test = base.extend({
 
   billPaymentPage: async ({ page }, use) => {
     await use(new BillPaymentPage(page));
+  },
+
+  api: async ({ request }, use) => {
+    await use(new ParaBankApi(request));
   },
 });
 
