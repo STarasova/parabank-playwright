@@ -41,4 +41,13 @@ export class ParaBankApi {
     await expect(response).toBeOK();
     return await response.json();
   }
+
+  async transfer(fromAccountId, toAccountId, amount) {
+    const response = await this.request.post(`${API}/transfer`, {
+      headers: HEADERS,
+      params: { fromAccountId, toAccountId, amount },
+    });
+    await expect(response).toBeOK();
+    return await response.text();
+  }
 }

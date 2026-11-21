@@ -28,6 +28,7 @@ test('INT-02: transfer via UI is shown in the API', async ({
   const toBalanceBefore = (await api.getAccount(secondAccount)).balance;
 
   const amount = 12.34;
+
   await transferFundsPage.open();
   await transferFundsPage.transfer(amount, firstAccount, secondAccount);
 
@@ -36,4 +37,28 @@ test('INT-02: transfer via UI is shown in the API', async ({
 
   expect(fromBalanceAfter).toBeCloseTo(fromBalanceBefore - amount, 2);
   expect(toBalanceAfter).toBeCloseTo(toBalanceBefore + amount, 2);
+});
+
+test('INT-03: transfer via API is shown in the UI', async ({
+  customerWithTwoAccounts,
+  api,
+  accountDetailsPage,
+}) => {
+  const { firstAccount, secondAccount } = customerWithTwoAccounts;
+
+  const amount = 12.34;
+
+  await api.transfer(firstAccount, secondAccount, amount);
+
+  await accountDetailsPage.open(firstAccount);
+  const sent = await accountDetailsPage.getTransaction(amount);
+
+  expect(sent.debit).toBe(amount);
+  expect(sent.credit).toBe(0);
+
+  await accountDetailsPage.open(secondAccount);
+  const received = await accountDetailsPage.getTransaction(amount);
+
+  expect(received.credit).toBe(amount);
+  expect(received.debit).toBe(0);
 });
