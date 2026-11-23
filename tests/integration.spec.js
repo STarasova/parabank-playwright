@@ -62,3 +62,27 @@ test('INT-03: transfer via API is shown in the UI', async ({
   expect(received.credit).toBe(amount);
   expect(received.debit).toBe(0);
 });
+
+test('INT-04: account balances in the UI match the API', async ({
+  customerWithTwoAccounts,
+  api,
+  accountsOverviewPage,
+}) => {
+  const username = customerWithTwoAccounts.customer.username;
+  const password = customerWithTwoAccounts.customer.password;
+
+  const customerId = (await api.login(username, password)).id;
+
+  const accountsFromAPI = await api.getAccounts(customerId);
+
+  await accountsOverviewPage.open();
+
+  const accountNumbersFromUI = await accountsOverviewPage.getAccountNumbers();
+
+  expect(accountNumbersFromUI).toHaveLength(accountsFromAPI.length);
+
+  for (const account of accountsFromAPI) {
+    const balanceInUI = await accountsOverviewPage.getBalance(String(account.id));
+    expect(balanceInUI).toBeCloseTo(account.balance, 2);
+  }
+});
