@@ -4,6 +4,7 @@
   "description": "UI, API and integration tests for the ParaBank demo banking app with Playwright and Postman",
   "scripts": {
     "test": "playwright test",
+    "test:api": "newman run postman/ParaBank.API.postman_collection.json -e postman/ParaBank.postman_environment.json --folder Login --folder Accounts --folder Transfer --folder Negative",
     "format": "prettier --write ."
   },
   "keywords": [],

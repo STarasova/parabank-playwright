@@ -12,7 +12,7 @@ test('ACC-01: new customer has an account', async ({ accountsOverviewPage, logge
   expect(totalBalance).toBe(balance);
 });
 
-test('ACC-02: customer can open new checking account', async ({
+test('ACC-02: opens a new checking account', async ({
   openAccountPage,
   accountsOverviewPage,
   loggedInCustomer,
@@ -28,7 +28,7 @@ test('ACC-02: customer can open new checking account', async ({
   expect(accountNumbers).toContain(newAccountNumber);
 });
 
-test('ACC-03: customer can open new saving account', async ({
+test('ACC-03: opens a new savings account', async ({
   openAccountPage,
   accountDetailsPage,
   loggedInCustomer,
