@@ -32,14 +32,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/login/{{username}}/{{password}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login",
-                "{{username}}",
-                "{{password}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["login", "{{username}}", "{{password}}"]
             }
           },
           "response": []
@@ -72,14 +66,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/customers/{{customerId}}/accounts",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "customers",
-                "{{customerId}}",
-                "accounts"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}", "accounts"]
             }
           },
           "response": []
@@ -112,12 +100,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/createAccount?customerId={{customerId}}&newAccountType=0&fromAccountId={{accountId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "createAccount"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["createAccount"],
               "query": [
                 {
                   "key": "customerId",
@@ -159,13 +143,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/accounts/{{accountId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "accounts",
-                "{{accountId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}"]
             }
           },
           "response": []
@@ -193,13 +172,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/accounts/{{secondAccountId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "accounts",
-                "{{secondAccountId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{secondAccountId}}"]
             }
           },
           "response": []
@@ -211,9 +185,7 @@
               "listen": "prerequest",
               "script": {
                 "type": "text/javascript",
-                "exec": [
-                  "pm.environment.set('amount', 12.35);\r\n\r\n"
-                ]
+                "exec": ["pm.environment.set('amount', 12.35);\r\n\r\n"]
               }
             },
             {
@@ -236,12 +208,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/transfer?fromAccountId={{accountId}}&toAccountId={{secondAccountId}}&amount={{amount}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "transfer"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["transfer"],
               "query": [
                 {
                   "key": "fromAccountId",
@@ -283,13 +251,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/accounts/{{accountId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "accounts",
-                "{{accountId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}"]
             }
           },
           "response": []
@@ -317,13 +280,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/accounts/{{secondAccountId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "accounts",
-                "{{secondAccountId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{secondAccountId}}"]
             }
           },
           "response": []
@@ -356,14 +314,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/login/{{username}}/wrong-password",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login",
-                "{{username}}",
-                "wrong-password"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["login", "{{username}}", "wrong-password"]
             }
           },
           "response": []
@@ -391,13 +343,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/accounts/000",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "accounts",
-                "000"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "000"]
             }
           },
           "response": []
@@ -431,12 +378,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/transfer?fromAccountId={{accountId}}&toAccountId={{secondAccountId}}&amount=-50",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "transfer"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["transfer"],
               "query": [
                 {
                   "key": "fromAccountId",
