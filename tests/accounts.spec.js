@@ -41,7 +41,7 @@ test('ACC-03: opens a new savings account', async ({
   await expect(accountDetailsPage.accountType).toHaveText('SAVINGS');
 });
 
-test('ACC-04: correct total balance when opens new account', async ({
+test('ACC-04: opening an account moves the deposit and keeps the total', async ({
   loggedInCustomer,
   accountsOverviewPage,
   openAccountPage,
