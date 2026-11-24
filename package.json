@@ -1,19 +1,19 @@
 {
   "name": "parabank-playwright",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "UI, API and integration tests for the ParaBank demo banking app with Playwright and Postman",
   "scripts": {
     "test": "playwright test",
     "format": "prettier --write ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Svitlana Tarasova",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
+    "newman": "^6.2.3",
     "prettier": "^3.9.10"
   }
 }
