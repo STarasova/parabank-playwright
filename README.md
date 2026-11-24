@@ -136,27 +136,41 @@ npx playwright show-report            # open the last HTML report
 
 ### API tests with Newman
 
-The collection uses one pre-registered customer, because ParaBank has no registration API.
+ParaBank has no registration API, so the collection works with a pre-registered test customer. Its credentials are stored in the environment file: username `123`, password `123`.
 
-1. Register a customer manually on the [ParaBank registration page](https://parabank.parasoft.com/parabank/register.htm). Use a unique username: the site is shared.
-2. Check the credentials via the API by opening `https://parabank.parasoft.com/parabank/services/bank/login/<username>/<password>` in a browser — it should return the customer's data.
-3. Run the collection, passing the credentials:
+1. Check that the test customer exists by opening this URL in a browser:
+
+   ```
+   https://parabank.parasoft.com/parabank/services/bank/login/123/123
+   ```
+
+   It should return the customer's data. Check via the API, not the UI: the UI login has been seen accepting any credentials (see [Bugs found](#bugs-found)).
+
+2. If it returns `Invalid username and/or password`, the demo database has been reset. Register the customer again on the [ParaBank registration page](https://parabank.parasoft.com/parabank/register.htm) with username `123` and password `123` (any values for the other fields).
+
+3. Run the collection:
+
+   ```bash
+   npm run test:api
+   ```
+
+`test:api` runs every folder except **Known bugs**, which fails by design while the bug exists.
+
+If the username `123` is already taken by another visitor of the shared site, register a customer with any other credentials and pass them on the command line — they override the values from the environment file:
 
 ```bash
 npm run test:api -- --env-var "username=<username>" --env-var "password=<password>"
 ```
 
-`test:api` runs every folder except **Known bugs**, which fails by design while the bug exists.
-
 ### API tests in Postman
 
-Import both files from the `postman/` folder, select the **ParaBank** environment, set `username` and `password` as current values, and run the collection.
+Make sure the test customer exists (see above), import both files from the `postman/` folder, select the **ParaBank** environment and run the collection.
 
 ## Limitations
 
 - **Rate limiting.** ParaBank is protected by Cloudflare and temporarily blocks clients that send too many requests (Error 1015 — *You are being rate limited*). Tests therefore run in a single worker. A failure with an Error 1015 page in the report is an environment problem, not a test failure.
 - **Unstable environment.** The site is shared, its database is reset periodically, and its behaviour sometimes changes (see [Bugs found](#bugs-found)). In CI each failed test is retried once; tests reported as *flaky* should be reviewed, since they may reveal intermittent ParaBank defects.
-- **Postman collection and a fixed customer.** The collection checks that a customer has exactly one account, so it is meant to run against a freshly registered customer. The customer must be registered again after a database reset.
+- **Postman collection and a fixed customer.** The collection uses one shared test customer (`123` / `123`), which must be registered again after each database reset. It also checks that the customer has exactly one account, so it is meant to run against a freshly registered customer; a repeated run against the same customer fails this check.
 - **Chromium only.** Other browsers can be enabled in `playwright.config.js`.
 
 ## Out of scope
