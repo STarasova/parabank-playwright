@@ -34,10 +34,7 @@ test('REG-02: empty form shows required field errors', async ({ page, registerPa
   await expect(page.getByRole('link', { name: 'Log Out' })).not.toBeVisible();
 });
 
-test('REG-03: rejects if password and confirm password do not match', async ({
-  page,
-  registerPage,
-}) => {
+test('REG-03: rejects mismatched password confirmation', async ({ page, registerPage }) => {
   const customer = createCustomer({ confirmPassword: 'Mismatch' });
 
   await registerPage.open();
